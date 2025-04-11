@@ -13,12 +13,6 @@ Travelers often struggle to find the ideal hotel that matches their unique prefe
 ### Traditional Machine Learning
 - A hybrid filtering method combines multiple techniques to capture user preferences and rank hotel recommendations effectively.
 
-- **Collaborative Filtering:**  
-  Capture user preferences based on similar users' choices.
-
-- **Content-Based Filtering:**  
-  Leverage hotel features (amenities, location, price range).
-
 - **Matrix Factorization:**  
   Utilize techniques like Singular Value Decomposition (SVD) and Alternating Least Squares (ALS).
 
