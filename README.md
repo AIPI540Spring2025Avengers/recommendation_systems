@@ -5,19 +5,47 @@
 
 Travelers often struggle to find the ideal hotel that matches their unique preferences and constraints. Whether searching for luxury accommodations, budget-friendly options, or hotels offering specific amenities, existing platforms rarely deliver personalized recommendations. This project develops a robust recommendation system tailored to individual traveler interests and needs.
 
-## Approaches 
+
+## Data Processing Pipeline
+
+---
+
+### Data Download and Loading
+- Downloads the hotels dataset from [Kaggle](https://www.kaggle.com/datasets/raj713335/tbo-hotels-dataset/data)
+- Loads the raw data into memory for processing
+
+---
+
+### Data Cleaning and Transformation
+- Cleans column names by removing whitespace and standardizing formatting
+- Removes duplicate hotel entries
+- Renames columns for consistency (e.g., `countyName` → `country`)
+- Converts star ratings from text (e.g., `"Three Star"`) to numeric values
+- Removes invalid or non-numeric ratings (e.g., `"All"`)
+- Drops irrelevant columns such as fax numbers and phone numbers
+- Extracts latitude and longitude from map coordinate strings
+
+---
+
+### Amenity Extraction
+- Parses hotel facilities text to identify standardized amenities
+- Uses fuzzy matching against a predefined amenity vocabulary
+- Creates a clean list of amenities for each hotel entry
+
+---
+
+### 💾 Data Storage
+- Stores raw data in: `data/raw/hotels.csv`
+- Stores cleaned and processed data in: `data/processed/hotels_cleaned.csv`
+
+
+## Modeling Approaches 
 
 ### Naïve Rule-Based Classifier
 - Top 10 hotel recommendation based on rating for specific locations
 
 ### Traditional Machine Learning
 - A hybrid filtering method combines multiple techniques to capture user preferences and rank hotel recommendations effectively.
-
-- **Collaborative Filtering:**  
-  Capture user preferences based on similar users' choices.
-
-- **Content-Based Filtering:**  
-  Leverage hotel features (amenities, location, price range).
 
 - **Matrix Factorization:**  
   Utilize techniques like Singular Value Decomposition (SVD) and Alternating Least Squares (ALS).
@@ -26,12 +54,12 @@ Travelers often struggle to find the ideal hotel that matches their unique prefe
   Implement ranking models using XGBoost and LightGBM.
 
 ### Deep Learning 
-- For capturing complex patterns in both numeric and textual data, the deep learning approach integrates neural networks with transformer-based models.
+WIP
+- For capturing complex patterns in both numeric and textual data, the deep learning approach integrates neural networks with transformer-based models. 
 
 
 **Evaluation Metrics:**  
-WIP
-
+We use NDCG@K to evaluate all modeling approaches, as each produces a ranked list of hotel recommendations. NDCG rewards models that place highly relevant hotels at the top of the list, making it ideal for this task. It also accounts for the position of each recommendation, ensuring that correctly ranked top hotels contribute more to the score than those ranked lower. 
 
 ## User Interface
 
