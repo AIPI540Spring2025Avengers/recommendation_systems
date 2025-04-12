@@ -55,7 +55,8 @@ WIP
 
 ---
 
-**Evaluation Metrics:**  
+## Evaluation Metric
+
 We use NDCG@K to evaluate all modeling approaches, as each produces a ranked list of hotel recommendations. NDCG rewards models that place highly relevant hotels at the top of the list, making it ideal for this task. It also accounts for the position of each recommendation, ensuring that correctly ranked top hotels contribute more to the score than those ranked lower. 
 
 ---
