@@ -29,7 +29,7 @@ Travelers often struggle to find the ideal hotel that matches their unique prefe
 - Creates a clean list of amenities for each hotel entry
 
 
-### 💾 Data Storage
+### Data Storage
 - Stores raw data in: `data/raw/hotels.csv`
 - Stores cleaned and processed data in: `data/processed/hotels_cleaned.csv`
 
@@ -57,7 +57,7 @@ WIP
 
 ## Evaluation Metric
 
-We use NDCG@K to evaluate all modeling approaches, as each produces a ranked list of hotel recommendations. NDCG rewards models that place highly relevant hotels at the top of the list, making it ideal for this task. It also accounts for the position of each recommendation, ensuring that correctly ranked top hotels contribute more to the score than those ranked lower. 
+The models were primarily evaluated using NDCG@K. NDCG (Normalized Discounted Cumulative Gain) was used to measure the model’s ability to rank hotels so that those most relevant appear at the top of the recommendation list, providing a robust, position-sensitive assessment.
 
 ---
 
@@ -74,7 +74,7 @@ WIP
 ./setup.sh
 ```
 
-This script takes care of setting up your virtual environment if it does not already exist, activating it, installing requirements, pulling the dataset (if not already present in the data directory), pre-processing the data for the traditional model (feature extraction), and traditional model training.
+This script takes care of setting up your virtual environment if it does not already exist, activating it, installing requirements, pulling the dataset (if not already present in the data directory), and pre-processing the data.
 
 ## Running the Streamlit application locally
 
