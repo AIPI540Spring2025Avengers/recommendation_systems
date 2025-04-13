@@ -1,4 +1,3 @@
-
 # Hotel Recommendation System
 
 ## Overview
@@ -38,7 +37,16 @@ Travelers often struggle to find the ideal hotel that matches their unique prefe
 ## Modeling Approaches 
 
 ### Naïve Rule-Based Classifier
-- Top 10 hotel recommendation based on rating for specific locations
+Baseline approach that ranks hotels based on:
+- Star rating (primary factor)
+- Number of amenities (secondary factor)
+
+Features:
+- Global recommendations (top N hotels worldwide)
+- Country-specific recommendations
+- City-specific recommendations
+
+This serves as a baseline for comparing ML and Deep Learning recommendation approaches.
 
 ### Traditional Machine Learning
 - A hybrid filtering method combines multiple techniques to capture user preferences and rank hotel recommendations effectively.
