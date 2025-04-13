@@ -1,6 +1,10 @@
 import pandas as pd
 import os
 
+# this is the naive recommendation system, simple sort by rating and amenities
+# depending on world, country, or city.
+
+
 # load hotels data
 def load_hotels_data():
     data_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), "data")
@@ -11,7 +15,8 @@ def load_hotels_data():
 # sort hotels by rating and amenities
 def sort_by_rating_and_amenities(df, top_n):
     df = df.copy()  # new dataframe
-    df['AmenityCount'] = df['ParsedAmenities'].apply(lambda x: len(eval(x)) if pd.notna(x) else 0)
+    # count the number of amenities for each hotel
+    df['AmenityCount'] = df['ParsedAmenities'].apply(len)
     # sort by rating and amenities
     sorted_df = df.sort_values(by=['HotelRating', 'AmenityCount'], ascending=[False, False])
     return sorted_df.drop(columns=['AmenityCount']).head(top_n)
