@@ -1,8 +1,11 @@
 import pandas as pd
 import os
+import ast  # Add this import
 
 # this is the naive recommendation system, simple sort by rating and amenities
 # depending on world, country, or city.
+
+#
 
 
 # load hotels data
@@ -15,16 +18,16 @@ def load_hotels_data():
 # sort hotels by rating and amenities
 def sort_by_rating_and_amenities(df, top_n):
     df = df.copy()  # new dataframe
-    # count the number of amenities for each hotel
-    df['AmenityCount'] = df['ParsedAmenities'].apply(len)
+    # convert string representation of list to actual list and count amenities
+    df['AmenityCount'] = df['ParsedAmenities'].apply(lambda x: len(ast.literal_eval(x)) if pd.notna(x) else 0)
     # sort by rating and amenities
     sorted_df = df.sort_values(by=['HotelRating', 'AmenityCount'], ascending=[False, False])
-    return sorted_df.drop(columns=['AmenityCount']).head(top_n)
+    return sorted_df.head(top_n)
 
 
 # get top 10 hotels globally
 def get_top_hotels_global(hotels, top_n=10):
-    return sort_by_rating_and_amenities(hotels, top_n)[['HotelName', 'city', 'country', 'HotelRating', 'ParsedAmenities']]
+    return sort_by_rating_and_amenities(hotels, top_n)[['HotelName', 'city', 'country', 'HotelRating', 'ParsedAmenities', 'AmenityCount']]
 
 # get top hotels in a city
 def get_top_hotels_by_city(hotels, city_name, top_n=5):
@@ -33,7 +36,7 @@ def get_top_hotels_by_city(hotels, city_name, top_n=5):
     # if no hotels, return empty dataframe
     if city_hotels.empty:
         return pd.DataFrame()
-    return sort_by_rating_and_amenities(city_hotels, top_n)[['HotelName', 'HotelRating', 'city', 'country', 'ParsedAmenities']]
+    return sort_by_rating_and_amenities(city_hotels, top_n)[['HotelName', 'HotelRating', 'city', 'country', 'ParsedAmenities', 'AmenityCount']]
 
 # get top hotels in a country
 def get_top_hotels_by_country(hotels, country_name, top_n=5):
@@ -42,7 +45,7 @@ def get_top_hotels_by_country(hotels, country_name, top_n=5):
     # if no hotels, return empty dataframe
     if country_hotels.empty:
         return pd.DataFrame()
-    return sort_by_rating_and_amenities(country_hotels, top_n)[['HotelName', 'HotelRating', 'city', 'country', 'ParsedAmenities']]
+    return sort_by_rating_and_amenities(country_hotels, top_n)[['HotelName', 'HotelRating', 'city', 'country', 'ParsedAmenities', 'AmenityCount']]
 
 # main function
 def main():
