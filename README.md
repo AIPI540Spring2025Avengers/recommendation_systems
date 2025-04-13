@@ -1,4 +1,3 @@
-
 # Hotel Recommendation System
 
 ## Overview
@@ -29,7 +28,7 @@ Travelers often struggle to find the ideal hotel that matches their unique prefe
 - Creates a clean list of amenities for each hotel entry
 
 
-### 💾 Data Storage
+### Data Storage
 - Stores raw data in: `data/raw/hotels.csv`
 - Stores cleaned and processed data in: `data/processed/hotels_cleaned.csv`
 
@@ -38,7 +37,17 @@ Travelers often struggle to find the ideal hotel that matches their unique prefe
 ## Modeling Approaches 
 
 ### Naïve Rule-Based Classifier
-- Top 10 hotel recommendation based on rating for specific locations
+
+Baseline approach that ranks hotels based on:
+- Star rating (primary factor)
+- Number of amenities (secondary factor)
+
+Features:
+- Global recommendations (top N hotels worldwide)
+- Country-specific recommendations
+- City-specific recommendations
+
+Lists Top K hotel recommendations
 
 ### Traditional Machine Learning
 - A hybrid filtering method combines multiple techniques to capture user preferences and rank hotel recommendations effectively.
