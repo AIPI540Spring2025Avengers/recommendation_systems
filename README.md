@@ -9,30 +9,7 @@ Travelers often struggle to find the ideal hotel that matches their unique prefe
 
 ## Data Processing Pipeline
 
-### Data Download and Loading
-- Downloads the hotels dataset from [Kaggle](https://www.kaggle.com/datasets/raj713335/tbo-hotels-dataset/data)
-- Loads the raw data into memory for processing
-
-
-### Data Cleaning and Transformation
-- Cleans column names by removing whitespace and standardizing formatting
-- Removes duplicate hotel entries
-- Renames columns for consistency (e.g., `countyName` → `country`)
-- Converts star ratings from text (e.g., `"Three Star"`) to numeric values
-- Removes invalid or non-numeric ratings (e.g., `"All"`)
-- Drops irrelevant columns such as fax numbers and phone numbers
-- Extracts latitude and longitude from map coordinate strings
-
-### Amenity Extraction
-- Parses hotel facilities text to identify standardized amenities
-- Uses fuzzy matching against a predefined amenity vocabulary
-- Creates a clean list of amenities for each hotel entry
-
-
-### Data Storage
-- Stores raw data in: `data/raw/hotels.csv`
-- Stores cleaned and processed data in: `data/processed/hotels_cleaned.csv`
-
+WIP @ruhan-dave
 ---
 
 ## Modeling Approaches 
@@ -47,7 +24,7 @@ Travelers often struggle to find the ideal hotel that matches their unique prefe
   Utilize techniques like Singular Value Decomposition (SVD) and Alternating Least Squares (ALS).
 
 - **Gradient Boosting:**  
-  Implement ranking models using XGBoost and LightGBM.
+  Implement ranking models using LightGBM.
 
 ### Deep Learning 
 WIP
@@ -57,7 +34,7 @@ WIP
 
 ## Evaluation Metric
 
-The models were primarily evaluated using NDCG@K. NDCG (Normalized Discounted Cumulative Gain) was used to measure the model’s ability to rank hotels so that those most relevant appear at the top of the recommendation list, providing a robust, position-sensitive assessment.
+The models were primarily evaluated using mean Average Precision (mAP). mAP was used to measure the model’s ability to accurately rank hotels by calculating the average precision across all queries, emphasizing both the correctness and the order of relevant results.
 
 ---
 
@@ -88,7 +65,7 @@ python main.py
 ---
 
 ## Dataset & License
-This repository uses the [Hotels Dataset](https://www.kaggle.com/datasets/raj713335/tbo-hotels-dataset/data) dataset from Kaggle, licensed under MIT.
+This repository uses the [Expedia Hotel Dataset](https://www.kaggle.com/c/expedia-hotel-recommendations) dataset licensed under competition rules definded by Kaggle.
 
 ---
 
