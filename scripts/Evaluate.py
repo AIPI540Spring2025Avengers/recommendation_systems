@@ -2,10 +2,10 @@ import torch
 import pandas as pd
 import numpy as np
 import os
-from scripts.Data_Preprocess import data_preprocess
-from scripts.Recommand_Deeplearning import get_topk_similar_hotels
-from scripts.Model_Evaluation import model_evaluation
-from scripts.Recommand_Deeplearning import hotel_data_encoder
+from Data_Preprocess import data_preprocess
+from Recommand_Deeplearning import get_topk_similar_hotels
+from Model_Evaluation import model_evaluation
+from Recommand_Deeplearning import hotel_data_encoder
 
 def evaluate_recommendation_system():
     """
