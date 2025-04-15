@@ -92,11 +92,106 @@ The model is evaluated by computing the average cosine similarity between user a
 - Matplotlib
 - scikit-learn
 
+## Installation
+
+### Prerequisites
+
+- Python 3.7 or higher
+- pip (Python package installer)
+- Git (optional, for cloning the repository)
+
+### Installation Steps
+
+1. **Clone or download the repository**:
+   ```bash
+   git clone <repository-url>
+   cd hotel_recommendation_system
+   ```
+
+2. **Install the package and dependencies**:
+   ```bash
+   pip install -e .
+   ```
+   Or install using the requirements file:
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+3. **Verify the installation**:
+   ```bash
+   python -c "from scripts.Double_Tower import DeepUserTower, DeepHotelTower; print('Installation successful!')"
+   ```
+
+### Directory Structure
+
+```
+hotel_recommendation_system/
+├── data/                  # Contains training data
+│   └── train.csv         
+├── models/                # Pre-trained model files
+│   ├── hotel_tower.pth   
+│   └── user_tower.pth    
+├── scripts/               # Core implementation files
+│   ├── Data_Preprocess.py
+│   ├── Dataset_Class.py  
+│   ├── Double_Tower.py   
+│   ├── Model_Evaluation.py
+│   └── Recommand_Deeplearning.py
+├── Evaluate.py            # Evaluation script
+├── Get_Recommandation.py  # Script for generating recommendations
+├── Setup.py               # Package setup file
+├── Train.py               # Training script
+└── README.md              # Project documentation
+```
+
+### Troubleshooting
+
+#### Model File Paths
+
+If you encounter errors related to model file paths, ensure that the model files (`hotel_tower.pth` and `user_tower.pth`) are located either in:
+- The root directory
+- The `models/` directory
+- The `Model/` directory
+
+The system will check all these locations when loading models.
+
+#### Data File Not Found
+
+If the system cannot find the training data file, ensure that `train.csv` is located in the `data/` directory. You may need to adjust the path in the scripts if your data is stored in a different location.
+
+#### CUDA/GPU Issues
+
+If you encounter CUDA-related errors:
+1. Ensure you have a compatible NVIDIA GPU
+2. Install the appropriate CUDA toolkit
+3. Install the CUDA-compatible version of PyTorch
+
+If you don't have a GPU, the system will automatically use CPU mode, though training and evaluation will be slower.
+
 ## Usage
+
+### Running the Scripts
+
+1. **Evaluate the recommendation system**:
+   ```bash
+   python Evaluate.py
+   ```
+
+2. **Train the model**:
+   ```bash
+   python Train.py
+   ```
+
+3. **Get recommendations**:
+   ```bash
+   python Get_Recommandation.py
+   ```
+
+### Using the API
 
 1. Process the raw data:
    ```python
-   from Function.Data_Preprocess import data_preprocess
+   from scripts.Data_Preprocess import data_preprocess
    train_User_data, test_User_data, train_Hotel_data, test_Hotel_data = data_preprocess(raw_data)
    ```
 
@@ -108,13 +203,13 @@ The model is evaluated by computing the average cosine similarity between user a
 
 3. Evaluate the model:
    ```python
-   from Function.Model_Evaluation import model_evaluation
+   from scripts.Model_Evaluation import model_evaluation
    avg_similarity = model_evaluation(test_User_data, test_Hotel_data)
    ```
 
 4. Get hotel recommendations for a user:
    ```python
-   from Function.Recommand_Deeplearning import hotel_data_encoder, get_topk_similar_hotels
+   from scripts.Recommand_Deeplearning import hotel_data_encoder, get_topk_similar_hotels
    encoded_hotels = hotel_data_encoder(hotel_data)
    recommendations = get_topk_similar_hotels(user_vector, encoded_hotels, hotel_data, topk=20)
    ```

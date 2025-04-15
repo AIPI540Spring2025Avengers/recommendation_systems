@@ -1,5 +1,5 @@
 import torch
-from Function.Recommand_Deeplearning import hotel_data_encoder, get_topk_similar_hotels
+from scripts.Recommand_Deeplearning import hotel_data_encoder, get_topk_similar_hotels
 import pandas as pd
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
