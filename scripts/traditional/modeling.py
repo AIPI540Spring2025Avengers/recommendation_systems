@@ -6,6 +6,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 sns.set_style('whitegrid')
+import os
 # %matplotlib inline
 
 import plotly.express as px
@@ -220,12 +221,17 @@ def xgb_plot_feature_importance(model):
 
     return feature_importance_df
 
-if __name__ == "__main__":
+def preprocess_and_save_data():
+    """
+    Preprocesses the data and saves it to the processed directory without training the model.
+    """
     print("----------------------------")
+    print("Starting data preprocessing...")
 
     # get expedia & test csv files as a DataFrame
-    train_df = pd.read_csv('./train.csv', nrows=10000)
-    test_df = pd.read_csv('./test.csv', nrows=10000)
+    data_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), "data")
+    train_df = pd.read_csv(os.path.join(data_dir, "raw", "train.csv"), nrows=10000)
+    test_df = pd.read_csv(os.path.join(data_dir, "raw", "test.csv"), nrows=10000)
 
     # preview the data
     train_df.head()
@@ -264,23 +270,41 @@ if __name__ == "__main__":
     train_df = preprocess_datetime_columns(train_df)
     test_df = preprocess_datetime_columns(test_df)
 
-    # Model Training 
-    xgb, map_scores, y_pred, y_proba = xgboost_map_classification(train_df, target_col='hotel_cluster', features=features, k_values=[5])
+    # save the processed train data in processed folder
+    processed_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), "data", "processed")
+    os.makedirs(processed_dir, exist_ok=True)
+    train_df.to_csv(os.path.join(processed_dir, "train_processed.csv"), index=False)
+    test_df.to_csv(os.path.join(processed_dir, "test_processed.csv"), index=False)
+    
+    print("Data preprocessing and saving completed!")
+    return train_df, test_df, features
 
-    # Plot feature importance map
-    feature_importance_df = xgb_plot_feature_importance(xgb)
-    # Display top 10 features
-    feature_importance_df["feature"][:10].to_list()
+if __name__ == "__main__":
+    import argparse
+    
+    parser = argparse.ArgumentParser(description='Run data preprocessing and/or model training')
+    parser.add_argument('--preprocess-only', action='store_true', help='Only run data preprocessing without training')
+    args = parser.parse_args()
+    
+    if args.preprocess_only:
+        preprocess_and_save_data()
+    else:
+        # Run the full pipeline including training
+        train_df, test_df, features = preprocess_and_save_data()
+        
+        # Model Training 
+        xgb, map_scores, y_pred, y_proba = xgboost_map_classification(train_df, target_col='hotel_cluster', features=features, k_values=[5])
 
-    # Save the model using pickle
-    with open("./xgboost_model.pkl", "wb") as file:
-        pickle.dump(xgb, file)
+        # Plot feature importance map
+        feature_importance_df = xgb_plot_feature_importance(xgb)
+        # Display top 10 features
+        feature_importance_df["feature"][:10].to_list()
+        # save model in models folder
+        models_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), "models")
+        os.makedirs(models_dir, exist_ok=True)
+        with open(os.path.join(models_dir, "xgboost_model.pkl"), "wb") as file:
+            pickle.dump(xgb, file)
 
-    # Load the model using pickle
-    with open("./xgboost_model.pkl", "rb") as file:
-        loaded_model = pickle.load(file)
-
-
-
-
-
+        # Load the model using pickle
+        with open(os.path.join(models_dir, "xgboost_model.pkl"), "rb") as file:
+            loaded_model = pickle.load(file)
