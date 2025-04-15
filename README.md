@@ -125,6 +125,6 @@ View our Pitch [HERE](https://docs.google.com/presentation/d/1f10f97H5Tj7s4oodW_
 
 ## Streamlit Application
 
-Access our Streamlit application [HERE]().
+Access our Streamlit application [HERE](https://hotelrecs.streamlit.app/).
 
-# ChatGPT was used to help refine and polish this README for better grammar and flow.
+### ChatGPT was used to help refine and polish this README for better grammar and flow.
