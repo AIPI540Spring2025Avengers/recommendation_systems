@@ -21,22 +21,16 @@ def evaluate_recommendation_system():
     _, test_User_data, _, test_Hotel_data = data_preprocess(pd.read_csv("data/train.csv"))
     
     # Load user model from different possible paths
-    model_paths = ["user_tower.pth", "Model/user_tower.pth"]
-    user_tower = None
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    
-    for path in model_paths:
-        if os.path.exists(path):
-            user_tower = torch.load(path, weights_only=False)
-            print(f"Loaded user model from: {path}")
-            break
-    
-    if user_tower is None:
-        raise FileNotFoundError("Could not find user_tower.pth in any of the expected locations")
-    
+    user_tower = torch.load("models/user_tower.pth", weights_only=False)
+    hotel_tower = torch.load("models/hotel_tower.pth", weights_only=False)
+
     user_tower.eval()
     user_tower.to(device)
+    hotel_tower.eval()
+    hotel_tower.to(device)
     
+
     print(f"Test data loaded: {len(test_User_data)} user records and {len(test_Hotel_data)} hotel records")
     
     # Encode all hotels in test set
@@ -77,7 +71,7 @@ def evaluate_recommendation_system():
                     recommended_encoded = hotel_data_encoder(recommended_hotels)
                     
                     # Evaluate similarity
-                    accuracy = model_evaluation(recommended_encoded, true_encoded)
+                    accuracy = model_evaluation(recommended_encoded, true_encoded, user_tower, hotel_tower, device)
                     total_accuracy += accuracy
                     valid_users += 1
                     

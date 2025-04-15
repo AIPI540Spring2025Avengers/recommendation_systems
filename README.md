@@ -393,3 +393,47 @@ Possible enhancements to the recommendation system:
 - Implement more complex architectures like transformers
 - Add content-based features from hotel descriptions
 - Include collaborative filtering signals
+
+
+# Hotel Recommendation System Evaluation
+
+## Overview
+This document describes the evaluation process of our two-tower recommendation model for hotel recommendations. The model uses a dual-encoder architecture where user features and hotel features are encoded into separate embedding spaces, and recommendations are made based on similarity between these representations.
+
+## Evaluation Process
+
+### Data Preparation
+1. The model was trained on a filtered dataset containing only actual bookings (`is_booking == 1`).
+2. User features include:
+   - Geographical information (continent, country, region, city)
+   - Distance metrics (origin-destination distance)
+   - Device information (mobile usage)
+   - Search parameters (check-in/out dates, number of adults, children, rooms)
+3. Hotel features include:
+   - Location data (continent, country, market)
+   - Hotel cluster information
+
+### Model Architecture
+- **User Tower**: Encodes user features into a 32-dimensional embedding
+- **Hotel Tower**: Encodes hotel features into a matching 32-dimensional embedding
+- Both pre-trained models are loaded from saved files (`user_tower.pth` and `hotel_tower.pth`)
+
+### Evaluation Methodology
+1. **Test Dataset Creation**: 10,000 random user-hotel pairs were sampled from the processed dataset
+2. **Embedding Generation**:
+   - Unique hotel combinations were identified and encoded with the hotel tower
+   - Each test user was encoded with the user tower
+3. **Similarity Calculation**:
+   - For each user, the system computes similarity scores with all encoded hotels
+   - Top 20 most similar hotels are retrieved for each user
+4. **Performance Metrics**:
+   - **Rank Score**: Calculated as 1.0 / log2(1/similarity) for the actual booked hotel if it appears in top 20
+   - **Correlation Rate**: Measures how strongly correlated the top 20 recommended hotels are with the user vector
+   - A similarity threshold of 0.999999 is used to identify strongly correlated matches
+
+### Results
+The evaluation generates two main metrics:
+- Individual score for each user based on the rank of their actual booked hotel
+- Average correlation rate across all test users (current value: displayed in system output)
+
+This evaluation framework allows us to assess how effectively our recommendation model can identify hotels that match user preferences based on their encoded feature representations.
