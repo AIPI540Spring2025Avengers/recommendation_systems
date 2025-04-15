@@ -6,7 +6,7 @@
 Travelers often struggle to find the ideal hotel that matches their unique preferences and constraints. Whether searching for luxury accommodations, budget-friendly options, or hotels offering specific amenities, existing platforms rarely deliver personalized recommendations. This project develops a robust recommendation system tailored to individual traveler interests and needs.
 
 ---
-
+git 
 ## Data Processing Pipeline
 
 WIP @ruhan-dave
@@ -27,8 +27,24 @@ WIP @ruhan-dave
   Implement ranking models using LightGBM.
 
 ### Deep Learning 
-WIP
-- For capturing complex patterns in both numeric and textual data, the deep learning approach integrates neural networks with transformer-based models. 
+
+The deep learning approach uses a dual-tower neural network to generate hotel recommendations. The model maps user and hotel features into a shared 32-dimensional embedding space using fully connected layers with ReLU activation, batch normalization, and L2 normalization. Cosine similarity between user and hotel embeddings is computed to rank hotels. Given a user's search profile, the model retrieves the top K most similar hotels based on embedding similarity.
+
+---
+
+## Previous Efforts
+
+### Hotel2Vec Embeddings  
+Sadeghian et al. developed **Hotel2Vec**, a neural network architecture that learns hotel embeddings by integrating user clicks, hotel attributes, amenities, and geographic information. This approach effectively tackles the cold-start problem by incorporating diverse data sources.  
+[Paper: Hotel2Vec – Learning Hotel Embeddings](https://arxiv.org/abs/1910.03943)
+
+### NLP-Based Sentiment Analysis  
+Aravani et al. proposed a framework utilizing **BERT-based models** to analyze user reviews, categorizing hotels into "Bad," "Good," or "Excellent" based on sentiment. This method enhances personalized recommendations by understanding user preferences through textual feedback.  
+[Paper: Sentiment Analysis for Hotel Recommendation](https://arxiv.org/abs/2408.00716)
+
+### Integration of ChatGPT and Persuasive Technologies  
+Remountakis et al. explored the incorporation of **ChatGPT and persuasive techniques** into hotel recommender systems. Their approach aims to generate context-aware, personalized suggestions by analyzing user preferences and online reviews.  
+[Paper: ChatGPT in Recommender Systems](https://arxiv.org/abs/2307.14298)
 
 ---
 
@@ -65,7 +81,7 @@ python main.py
 ---
 
 ## Dataset & License
-This repository uses the [Expedia Hotel Dataset](https://www.kaggle.com/c/expedia-hotel-recommendations) dataset licensed under competition rules definded by Kaggle.
+This repository uses the [Expedia Hotel Dataset](https://www.kaggle.com/c/expedia-hotel-recommendations) dataset licensed under competition rules defined by Kaggle.
 
 ---
 
@@ -75,9 +91,9 @@ This project uses publicly available datasets in compliance with their terms of 
 
 ---
 
-## Presentation Link
+## Presentation Pitch Link
 
-View our presentation [HERE](https://docs.google.com/presentation/d/1f10f97H5Tj7s4oodW_kLxO4mKXoLSJzMlBV520TZrPM/edit?usp=sharing).
+View our Pitch [HERE](https://docs.google.com/presentation/d/1f10f97H5Tj7s4oodW_kLxO4mKXoLSJzMlBV520TZrPM/edit?usp=sharing).
 
 ---
 
