@@ -1,119 +1,129 @@
-# Hotel Recommendation System
+ # Hotel Recommendation System
 
-## Overview
+A deep learning-based hotel recommendation system that uses a dual-tower (two-tower) neural network architecture to match users with suitable hotels based on their preferences and hotel features.
 
-Travelers often struggle to find the ideal hotel that matches their unique preferences and constraints. Whether searching for luxury accommodations, budget-friendly options, or hotels offering specific amenities, existing platforms rarely deliver personalized recommendations. This project develops a robust recommendation system tailored to individual traveler interests and needs.
+## Project Overview
 
----
+This project implements a hotel recommendation system using a dual-tower neural network architecture. The system processes user and hotel data separately through two specialized neural networks (towers), creating embeddings that capture the essence of user preferences and hotel characteristics. These embeddings are then used to compute similarity scores, enabling personalized hotel recommendations.
 
-## Data Processing Pipeline
+## Model Architecture
 
-### Data Download and Loading
-- Downloads the hotels dataset from [Kaggle](https://www.kaggle.com/datasets/raj713335/tbo-hotels-dataset/data)
-- Loads the raw data into memory for processing
+### Double Tower Neural Network
 
+The core of the recommendation system is a Double Tower neural network architecture, which consists of two separate neural networks:
 
-### Data Cleaning and Transformation
-- Cleans column names by removing whitespace and standardizing formatting
-- Removes duplicate hotel entries
-- Renames columns for consistency (e.g., `countyName` → `country`)
-- Converts star ratings from text (e.g., `"Three Star"`) to numeric values
-- Removes invalid or non-numeric ratings (e.g., `"All"`)
-- Drops irrelevant columns such as fax numbers and phone numbers
-- Extracts latitude and longitude from map coordinate strings
+#### User Tower
 
-### Amenity Extraction
-- Parses hotel facilities text to identify standardized amenities
-- Uses fuzzy matching against a predefined amenity vocabulary
-- Creates a clean list of amenities for each hotel entry
+- **Input**: 10-dimensional vector of user features
+- **Output**: 32-dimensional normalized embedding vector
+- **Architecture**:
+  - Layer 1: Linear(10 → 128) → BatchNorm → ReLU
+  - Layer 2: Linear(128 → 512) → BatchNorm → ReLU → Dropout(0.1)
+  - Layer 3: Linear(512 → 256) → BatchNorm → ReLU
+  - Layer 4: Linear(256 → 128) → BatchNorm → ReLU
+  - Layer 5: Linear(128 → 64) → BatchNorm → ReLU
+  - Layer 6: Linear(64 → 32)
+  - L2 Normalization: Normalizes the output vector to unit length
 
+#### Hotel Tower
 
-### Data Storage
-- Stores raw data in: `data/raw/hotels.csv`
-- Stores cleaned and processed data in: `data/processed/hotels_cleaned.csv`
+- **Input**: 4-dimensional vector of hotel features
+- **Output**: 32-dimensional normalized embedding vector
+- **Architecture**:
+  - Layer 1: Linear(4 → 64) → BatchNorm → ReLU
+  - Layer 2: Linear(64 → 256) → BatchNorm → ReLU → Dropout(0.1)
+  - Layer 3: Linear(256 → 128) → BatchNorm → ReLU
+  - Layer 4: Linear(128 → 64) → BatchNorm → ReLU
+  - Layer 5: Linear(64 → 32)
+  - L2 Normalization: Normalizes the output vector to unit length
 
----
+### Key Design Features
 
-## Modeling Approaches 
+1. **Separate Towers**: By processing user and hotel data through separate networks, each tower can specialize in capturing the intrinsic patterns of its domain.
 
-### Naïve Rule-Based Classifier
+2. **Deep Architecture**: Multiple layers with gradually decreasing widths allow the model to learn hierarchical representations.
 
-Baseline approach that ranks hotels based on:
-- Star rating (primary factor)
-- Number of amenities (secondary factor)
+3. **Regularization Techniques**:
+   - Batch Normalization: Applied after each linear layer to stabilize training
+   - Dropout: Applied with a 10% rate in the second layer to prevent overfitting
+   - L2 Normalization: Applied to the final embeddings to ensure they lie on a unit hypersphere, making cosine similarity calculations more effective
 
-Features:
-- Global recommendations (top N hotels worldwide)
-- Country-specific recommendations
-- City-specific recommendations
+4. **Embedding Space**: Both towers output 32-dimensional embeddings in the same vector space, allowing direct comparison via cosine similarity.
 
-Lists Top K hotel recommendations
+## Training Process
 
-### Traditional Machine Learning
-- A hybrid filtering method combines multiple techniques to capture user preferences and rank hotel recommendations effectively.
+The model is trained by:
 
-- **Matrix Factorization:**  
-  Utilize techniques like Singular Value Decomposition (SVD) and Alternating Least Squares (ALS).
+1. Preprocessing raw hotel booking data to extract user and hotel features
+2. Encoding categorical variables and handling date information
+3. Creating positive sample pairs (user-hotel matches)
+4. Training both towers simultaneously with a shared optimizer
+5. Using cosine similarity and MSE loss to push matching user-hotel pairs to have high similarity (close to 1)
 
-- **Gradient Boosting:**  
-  Implement ranking models using XGBoost and LightGBM.
+## Inference and Recommendation
 
-### Deep Learning 
-WIP
-- For capturing complex patterns in both numeric and textual data, the deep learning approach integrates neural networks with transformer-based models. 
+During inference, the system:
 
----
+1. Encodes a user's features through the User Tower to get a user embedding
+2. Encodes multiple hotels through the Hotel Tower to get hotel embeddings
+3. Computes cosine similarity between the user embedding and each hotel embedding
+4. Returns the top-k hotels with the highest similarity scores as recommendations
 
-## Evaluation Metric
+## Data Preprocessing
 
-The models were primarily evaluated using NDCG@K. NDCG (Normalized Discounted Cumulative Gain) was used to measure the model’s ability to rank hotels so that those most relevant appear at the top of the recommendation list, providing a robust, position-sensitive assessment.
+The preprocessing pipeline:
 
----
+1. Filters only for actual bookings (is_booking = 1)
+2. Separates user and hotel features
+3. Encodes categorical variables like continent, country, region, and city
+4. Converts check-in and check-out dates to calculate reservation duration
+5. Handles missing values
+6. Splits data into training and testing sets
 
-## User Interface
+## Model Evaluation
 
-- **Streamlit Web App**: 
-WIP
+The model is evaluated by computing the average cosine similarity between user and hotel pairs in the test set. Higher average similarity indicates better model performance.
 
----
+## Dependencies
 
-## Setup
+- PyTorch
+- NumPy
+- Pandas
+- Matplotlib
+- scikit-learn
 
-```bash
-./setup.sh
-```
+## Usage
 
-This script takes care of setting up your virtual environment if it does not already exist, activating it, installing requirements, pulling the dataset (if not already present in the data directory), and pre-processing the data.
+1. Process the raw data:
+   ```python
+   from Function.Data_Preprocess import data_preprocess
+   train_User_data, test_User_data, train_Hotel_data, test_Hotel_data = data_preprocess(raw_data)
+   ```
 
-## Running the Streamlit application locally
+2. Train the model:
+   ```python
+   from Train import train_model
+   user_tower, hotel_tower = train_model(raw_data)
+   ```
 
-Assuming your virtual environment is setup and activated, and that the requirements are installed from running `setup.sh`,
-you can then run the following to startup a local instance of the Streamlit application.
+3. Evaluate the model:
+   ```python
+   from Function.Model_Evaluation import model_evaluation
+   avg_similarity = model_evaluation(test_User_data, test_Hotel_data)
+   ```
 
-```bash
-python main.py
-```
+4. Get hotel recommendations for a user:
+   ```python
+   from Function.Recommand_Deeplearning import hotel_data_encoder, get_topk_similar_hotels
+   encoded_hotels = hotel_data_encoder(hotel_data)
+   recommendations = get_topk_similar_hotels(user_vector, encoded_hotels, hotel_data, topk=20)
+   ```
 
----
+## Future Improvements
 
-## Dataset & License
-This repository uses the [Hotels Dataset](https://www.kaggle.com/datasets/raj713335/tbo-hotels-dataset/data) dataset from Kaggle, licensed under MIT.
-
----
-
-## **Ethics Statement**  
-
-This project uses publicly available datasets in compliance with their terms of use. We ensure that all data is handled responsibly, avoiding any misuse, unauthorized distribution, or unethical applications. No personally identifiable information (PII) is collected or used. 
-
----
-
-## Presentation Link
-
-View our presentation [HERE](https://docs.google.com/presentation/d/1f10f97H5Tj7s4oodW_kLxO4mKXoLSJzMlBV520TZrPM/edit?usp=sharing).
-
----
-
-## Streamlit Application
-
-WIP
-Access our Streamlit application [HERE]().
+Possible enhancements to the recommendation system:
+- Incorporate negative sampling techniques
+- Add attention mechanisms to better capture feature importance
+- Implement more complex architectures like transformers
+- Add content-based features from hotel descriptions
+- Include collaborative filtering signals
