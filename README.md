@@ -8,24 +8,40 @@ Travelers often struggle to find the ideal hotel that matches their unique prefe
 ---
 ## Data Processing Pipeline
 
-WIP @ruhan-dave
+### Deep Learning
+- Filters for actual bookings (`is_booking = 1`)
+- Separates user and hotel features
+- Encodes categorical variables (e.g., continent, country, region, city)
+- Calculates reservation duration from check-in and check-out dates
+- Handles missing values
+- Splits data into training and testing sets
+
+### Traditional Approach
+- Transforms datetime columns into numerical features (e.g., year, month, day)
+- Applies winsorization to cap outliers using IQR-based thresholds:  
+  `lower_bound = Q1 - 1.5 * IQR`, `upper_bound = Q3 + 1.5 * IQR`
+- Replaces sparse null values with column means
+- Ensures all features are numeric and suitable for model training
+
 ---
 
 ## Modeling Approaches 
 
 ### Naïve Rule-Based Classifier
-- Top 10 hotel recommendation based on rating for specific locations
+- Top K hotel recommendations 
 
-### Traditional Machine Learning
-- A hybrid filtering method combines multiple techniques to capture user preferences and rank hotel recommendations effectively.
+### Traditional Modeling Approach
 
-- **Matrix Factorization:**  
-  Utilize techniques like Singular Value Decomposition (SVD) and Alternating Least Squares (ALS).
+We use an XGBoost classifier for multiclass hotel recommendation, trained with 5-fold stratified cross-validation to maintain class distribution across folds.
 
-- **Gradient Boosting:**  
-  Implement ranking models using LightGBM.
+### Model Configuration
+- `objective="multi:softprob"`: Multiclass classification with probability outputs
+- `num_class`: Automatically set based on number of unique hotel labels
+- `eval_metric="mlogloss"`: Multi-class log loss as the evaluation metric
+- `max_depth=10`: Limits tree depth to reduce overfitting
+- `n_jobs=-1`: Enables parallel processing using all available CPU cores
 
-### Deep Learning 
+### Deep Learning Approach
 
 The deep learning approach uses a dual-tower neural network to generate hotel recommendations. The model maps user and hotel features into a shared 32-dimensional embedding space using fully connected layers with ReLU activation, batch normalization, and L2 normalization. Cosine similarity between user and hotel embeddings is computed to rank hotels. Given a user's search profile, the model retrieves the top K most similar hotels based on embedding similarity.
 
