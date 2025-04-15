@@ -6,7 +6,6 @@
 Travelers often struggle to find the ideal hotel that matches their unique preferences and constraints. Whether searching for luxury accommodations, budget-friendly options, or hotels offering specific amenities, existing platforms rarely deliver personalized recommendations. This project develops a robust recommendation system tailored to individual traveler interests and needs.
 
 ---
-git 
 ## Data Processing Pipeline
 
 WIP @ruhan-dave
@@ -81,7 +80,7 @@ python main.py
 ---
 
 ## Dataset & License
-This repository uses the [Expedia Hotel Dataset](https://www.kaggle.com/c/expedia-hotel-recommendations) dataset licensed under competition rules defined by Kaggle.
+This repository uses the [Expedia Hotel Dataset](https://www.kaggle.com/c/expedia-hotel-recommendations) licensed under competition rules defined by Kaggle.
 
 ---
 
@@ -91,7 +90,7 @@ This project uses publicly available datasets in compliance with their terms of 
 
 ---
 
-## Presentation Pitch Link
+## Presentation Pitch
 
 View our Pitch [HERE](https://docs.google.com/presentation/d/1f10f97H5Tj7s4oodW_kLxO4mKXoLSJzMlBV520TZrPM/edit?usp=sharing).
 
