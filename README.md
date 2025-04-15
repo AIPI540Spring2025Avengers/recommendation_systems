@@ -1,4 +1,3 @@
-
 # Hotel Recommendation System
 
 ## Overview
@@ -43,7 +42,9 @@ We use an XGBoost classifier for multiclass hotel recommendation, trained with 5
 
 ### Deep Learning Approach
 
+
 The deep learning approach uses a dual-tower neural network to generate hotel recommendations. The model maps user and hotel features into a shared 32-dimensional embedding space using fully connected layers with ReLU activation, batch normalization, and L2 normalization. Cosine similarity between user and hotel embeddings is computed to rank hotels. Given a user's search profile, the model retrieves the top K most similar hotels based on embedding similarity.
+
 
 ---
 
